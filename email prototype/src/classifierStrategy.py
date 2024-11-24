@@ -18,7 +18,7 @@ class classifierStrategy(ABC):
 
 class SVMStrategy(classifierStrategy):
     def __init__(self):
-        self.classifier = SVC(kernel='linear', probability=True, random_state=0)
+        self.classifier = SVC(kernel='linear', probability=True, random_state=0, max_iter=100)
         self.scaler = None
 
     def classify(self, X_train, y_train, X_test):
@@ -32,7 +32,7 @@ class SVMStrategy(classifierStrategy):
 
 class HistGBStrategy(classifierStrategy):
     def __init__(self):
-        self.classifier = HistGradientBoostingClassifier(max_iter=100, random_state=0)
+        self.classifier = HistGradientBoostingClassifier(random_state=0, learning_rate=0.5, max_iter=100)
 
     def classify(self, X_train, y_train, X_test):
         self.classifier.fit(X_train, y_train)
@@ -55,7 +55,7 @@ class HistGBStrategy(classifierStrategy):
 
 class SGDStrategy(classifierStrategy):
     def __init__(self):
-        self.classifier = SGDClassifier(loss='log_loss', max_iter=1000, tol=1e-3, random_state=0)
+        self.classifier = SGDClassifier(loss='log_loss', tol=1e-3, random_state=0, learning_rate=0.5, max_iter=100)
 
     def classify(self, X_train, y_train, X_test):
         self.classifier.fit(X_train, y_train)
@@ -65,11 +65,11 @@ class SGDStrategy(classifierStrategy):
 
     def predict(self, text):
         text = text.reshape(1, -1)
-        return self.classifier.predict(text), self.classifier.predict_proba(text)
+        return self.classifier.predict([text]), self.classifier.predict_proba([text])
 
 class AdaBoostingStrategy(classifierStrategy):
     def __init__(self):
-        self.classifier = AdaBoostClassifier(n_estimators=50, random_state=0)
+        self.classifier = AdaBoostClassifier(n_estimators=50, random_state=0, learning_rate=0.5, max_iter=100)
 
     def classify(self, X_train, y_train, X_test):
         self.classifier.fit(X_train, y_train)
@@ -79,11 +79,11 @@ class AdaBoostingStrategy(classifierStrategy):
 
     def predict(self, text):
         text = text.reshape(1, -1)
-        return self.classifier.predict(text), self.classifier.predict_proba(text)
+        return self.classifier.predict([text]), self.classifier.predict_proba([text])
 
 class MLPStrategy(classifierStrategy):
     def __init__(self):
-        self.classifier = MLPClassifier(hidden_layer_sizes=(100,), max_iter=300, random_state=0)
+        self.classifier = MLPClassifier(hidden_layer_sizes=(100,), random_state=0, learning_rate=0.5, max_iter=100)
         self.scaler = StandardScaler()
 
     def classify(self, X_train, y_train, X_test):

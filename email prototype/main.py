@@ -1,12 +1,14 @@
 #Necessary imports
 
 from data.data_translation import createTranslate
-from src.classifierFactory import ClassifierFactory
+from src.classifierFactory import ClassifierFactory, add_category
 from src.cli import cli, model_choose_cli
 from src.Decorator import check_and_save_csv
 from data.data_preprocessing import load_and_preprocess_data, transform_text_data, split_data, transform_single_text
 from src.model_training import train_svm, predict_svm, train_histgb, predict_histgb, train_sgd, predict_sgd, train_adaBoosting, predict_adaBoosting, train_mlp, predict_mlp
 from results.evaluation import evaluate_model
+from src.modelBuilder import change_model_params
+from src.feedbackObserver import submit_feedback
 import numpy as np
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -21,8 +23,19 @@ output_file_urgent = "email prototype/data/AppGallery_UrgentList.csv"
 initial_choice = cli()
 if initial_choice == "predict email":
     selected_model = model_choose_cli()
+
 elif initial_choice == "remove spam and seperate urgent emails":
+    print (initial_choice)
     check_and_save_csv(input_file_path, output_file_path, output_file_urgent)
+elif initial_choice == "submit feedback":
+    pass
+elif initial_choice == "add category":
+    add_category()
+    pass
+elif initial_choice == "change model params":
+    selected_model = model_choose_cli()
+    change_model_params(selected_model)
+    pass    
 
 
 # The following 3 lines, loads anad preprocesses the data, transforms text data into a more suitable format,
